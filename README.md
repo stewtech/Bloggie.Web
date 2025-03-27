@@ -8,3 +8,5 @@ Microsoft.EntityFrameworkCore.Tools
 
 I created a DbContext Class to interact with the SQL Database and to perform CRUD operations
 
+I then added a connection string inside appsettings.json
+
