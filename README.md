@@ -14,3 +14,7 @@ I then add Dependency Injection into Program.cs
 
 Next I did the EF Core Migrations
 
+Add-Migration "Initial Migration"
+
+Update-Database
+
