@@ -6,5 +6,5 @@ I created domain models called Blogpost.cs and Tag.cs
 I installed the Nuget Packages called Microsoft.EntityFrameworkCore.SqlServer
 Microsoft.EntityFrameworkCore.Tools
 
-
+I created a DbContext Class to interact with the SQL Database and to perform CRUD operations
 
