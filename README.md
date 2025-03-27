@@ -10,3 +10,4 @@ I created a DbContext Class to interact with the SQL Database and to perform CRU
 
 I then added a connection string inside appsettings.json
 
+I then add Dependency Injection into Program.cs 
