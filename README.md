@@ -57,3 +57,9 @@ Add-Migration "Initial Migration"
 
 Update-Database
 
+Next, I made the navbar dark using Bootstrap
+
+Then, I removed the privacy link and turned it into a dropdown nav item with Bootstrap and added the dropdown item called Add Tag
+
+
+
