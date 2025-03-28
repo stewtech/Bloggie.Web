@@ -83,5 +83,83 @@ This created a new view called AdminTags
 
 Within this view I have created a form with the input fields Name and Display Name and a Submit button.
 
+Then, I added a [HttpPost] method to the controller because when you submit the form it goes to the post method
+
+Then, I created a ViewModels folder and within that ViewModels folder I added a new class called AddTagRequest.cs
+
+Within the class called AddTagRequest, I added the properties
+
+namespace Bloggie.Web.Models.ViewModels
+{
+    public class AddTagRequest
+    {
+        public string Name { get; set; }
+        public string DisplayName { get; set; }
+    }
+}
+
+
+I then added Model Binding to the from by adding @model Bloggie.Web.Models.ViewModels.AddTagRequest
+
+Then I bound the Model to the View by adding asp-for attributes within the form elements
+
+@model Bloggie.Web.Models.ViewModels.AddTagRequest
+@{
+
+}
+
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Add New Tag - Admin Functionality</h1>
+    </div>
+</div>
+
+<div class="container py-5">
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" asp-for="Name"/>   
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Display Name</label>
+            <input type="text" class="form-control" id="displayName" asp-for="DisplayName" />
+        </div>
+
+        <div class="mb-3">   
+            <button type="submit" class="btn btn-dark">Submit</button>
+        </div>
+    </form>
+</div>
+
+Now, the Model will be coming as a request so I needed to put it in as the parameter for the IActionResult HttpPost method in the controller
+
+using Bloggie.Web.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Bloggie.Web.Controllers
+{
+    public class AdminTagsController : Controller
+    {
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ActionName("Add")]
+        public IActionResult Add(AddTagRequest addTagRequest)
+        {
+            var name = addTagRequest.Name;
+            var displayName = addTagRequest.DisplayName;
+
+            return View("Add");
+        }
+    }
+}
+
+The properties within the AddTagRequest Model then needed to be added within the IActionResult HttpPost method as variables
 
 
