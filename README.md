@@ -1,6 +1,6 @@
-Bloggie.Web is a ASP.NET CORE MVC USING .NET 8 BLOG WEBSITE.
+<h1>Bloggie.Web is a ASP.NET CORE MVC USING .NET 8 BLOG WEBSITE.
 
-I am building a .NET 8 ASP.NET CORE MVC web app Blog that will involve the following:
+I am building a .NET 8 ASP.NET CORE MVC web app Blog that will involve the following:</H1>
 
 Overview of the Blog Application:
 
