@@ -40,6 +40,8 @@ ASP.NET Core Identity managing authentication and authorization with customizabl
 
 I have used Visual Studio 2022 Community Edition to build this along with MS SQL / SQL Server Management Studio version 19
 
+<h1>Code Walk Through</h1>
+
 I created domain models called Blogpost.cs and Tag.cs
 
 I installed the Nuget Packages called Microsoft.EntityFrameworkCore.SqlServer
