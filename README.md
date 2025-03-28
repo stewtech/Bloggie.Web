@@ -160,5 +160,6 @@ namespace Bloggie.Web.Controllers
     }
 }
 
+The properties within the AddTagRequest Model then needed to be added within the IActionResult HttpPost method as variables
 
 
