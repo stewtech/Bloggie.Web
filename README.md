@@ -61,5 +61,27 @@ Next, I made the navbar dark using Bootstrap
 
 Then, I removed the privacy link and turned it into a dropdown nav item with Bootstrap and added the dropdown item called Add Tag
 
+Then, I created an new controller called AdminTags
+
+using Microsoft.AspNetCore.Mvc;
+
+namespace Bloggie.Web.Controllers
+{
+    public class AdminTagsController : Controller
+    {
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+    }
+}
+
+I then changed the action to Add(), and made it a getter by adding [HttpGet]
+
+This created a new view called AdminTags
+
+Within this view I have created a form with the input fields Name and Display Name and a Submit button.
+
 
 
