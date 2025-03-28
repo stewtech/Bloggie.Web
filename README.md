@@ -162,4 +162,129 @@ namespace Bloggie.Web.Controllers
 
 The properties within the AddTagRequest Model then needed to be added within the IActionResult HttpPost method as variables
 
+Once I have seen by WATCHING the values coming back from the controller, I then removed the variables within the method
+
+[HttpPost]
+[ActionName("Add")]
+public IActionResult Add(AddTagRequest addTagRequest)
+{
+   
+
+    return View("Add");
+}
+
+Now, I needed to make use of the DbContext to save the tag to the Database.
+
+Using constructor injection from the Program.cs file, so I created a constructor for this class
+
+using Bloggie.Web.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Bloggie.Web.Controllers
+{
+   
+    public class AdminTagsController : Controller
+    {
+        public AdminTagsController()
+        {
+            
+        }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ActionName("Add")]
+        public IActionResult Add(AddTagRequest addTagRequest)
+        {
+           
+
+            return View("Add");
+        }
+    }
+}
+
+
+Then added BloggieDbContext as a parameter
+
+I then made a private variable to be used in the method
+
+Then I initialized it within the public AdminTagsController method
+
+public class AdminTagsController : Controller
+{
+    private BloggieDbContext _bloggieDbContext;
+    public AdminTagsController(BloggieDbContext bloggieDbContext)
+    {
+        _bloggieDbContext = bloggieDbContext;
+    }
+
+After I did that I removed the private variable and by clicking on the bloggieDbContext parameter and pressing control . 
+I then had a popup to choose from and chose the 
+Create and assign field bloggieDbContext and Visual Studio automatically entered a private variable and initialized it within the method like this:
+
+     public class AdminTagsController : Controller
+ {
+     private readonly BloggieDbContext bloggieDbContext;
+
+     public AdminTagsController(BloggieDbContext bloggieDbContext)
+     {
+         this.bloggieDbContext = bloggieDbContext;
+
+
+After injecting bloggieDbContext I want to use it to save the Tag to the database
+
+Within the HttpPost IActionResult method, I used the private variable 
+        
+bloggieDbContext.Tags.Add(tag);
+
+This line of code will access the Tags from the DbContext file and will access the DbSet property named Tags
+
+Now I need to create the Add request method into a domain.Tag model
+
+So I created a new variable called tag
+
+Then used the domain model called Tag which is coming form bloggie.web.models.domain
+
+Then a using statement was added
+
+using Bloggie.Web.Models.Domain;
+
+Then using open and closing brackets assign values from addTagRequest inside Tag
+
+[HttpPost]
+[ActionName("Add")]
+public IActionResult Add(AddTagRequest addTagRequest)
+{
+    // Mapping AddTagRequest to Tag domain model
+
+    var tag = new Tag
+    {
+        Name = addTagRequest.Name,
+        DisplayName = addTagRequest.DisplayName
+    };
+
+    bloggieDbContext.Tags.Add(tag);
+    bloggieDbContext.SaveChanges();
+    return View("Add");
+}
+
+So I mapped the AddTagRequest to Tag domain Model
+
+Then I supplied the tag variable into the Add() method
+
+Now bloggieDbContext will be able to create the tag inside the Tags table in the database
+
+Then I added the SaveChanges() to save changes to the database
+
+bloggieDbContext.SaveChanges();
+
+
+
+
+
+
 
