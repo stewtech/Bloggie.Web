@@ -647,12 +647,7 @@ namespace Bloggie.Web.Controllers
 
 I then mad a Delete Button in the Edit.cshtml view file and added some razor code. 
 
-<!-- Button for deleting, with danger styling (red button) and additional margin to the left (ms-2) -->
-<!--asp-area="": This specifies the area in the application where the controller is located. In this case, it’s left empty, meaning the controller is in the default area.
-
-asp-controller="AdminTags": This specifies the controller to be used when the button is clicked, which is AdminTags in this case.
-
-asp-action="Delete": This specifies the action method to be invoked in the AdminTags controller when the button is clicked. The action method is Delete.-->
+<button class="btn btn-danger ms-2" type="submit" asp-area="" asp-controller="AdminTags" asp-action="Delete">Delete</button>
 
 
 
