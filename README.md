@@ -486,6 +486,13 @@ Regardless of success or failure, the method redirects back to the Edit page for
 
 So far the AdminTagsController.cs file looks like this:
 
+using Bloggie.Web.Data;
+using Bloggie.Web.Models.Domain;
+using Bloggie.Web.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Bloggie.Web.Controllers
+{
     // Defines the AdminTagsController, which inherits from the base Controller class.
     public class AdminTagsController : Controller
     {
@@ -499,7 +506,7 @@ So far the AdminTagsController.cs file looks like this:
             this.bloggieDbContext = bloggieDbContext;
         }
         // ---------------------- CREATE FUNCTIONALITY ----------------------
-        // Create Functionality - Adding the tag in these 2 action methods
+        // CREATE FUNCTIONALITY - Adding the tag in these 2 action methods
         // Handles HTTP GET requests to display the "Add" tag form.
         // Add page and show
         [HttpGet]
@@ -530,6 +537,7 @@ So far the AdminTagsController.cs file looks like this:
             return RedirectToAction("List");
            
         }
+        // READ FUNCTIONALITY
         // Handles HTTP GET requests to retrieve and display the list of tags from the database.
         // Create new page where I can display the list of tags coming from the database
         // Specifies that this method handles HTTP GET requests.
@@ -565,7 +573,7 @@ So far the AdminTagsController.cs file looks like this:
                 {
                     Id = tag.Id, // Assigns the ID.
                     Name = tag.Name, // Assigns the name.
-                    DisplayName = tag.DisplayName / Assigns the display name.
+                    DisplayName = tag.DisplayName // Assigns the display name.
                 };
                 // Pass the populated EditTagRequest object to the "Edit" view.
                 return View(editTagRequest);
@@ -574,6 +582,7 @@ So far the AdminTagsController.cs file looks like this:
             // If the tag is not found, return the view with null (likely showing an error message).
             return View(null);
         }
+        // UPDATE FUNCTIONALIY
         [HttpPost] // Specifies that this method handles HTTP POST requests.
         // Accepts an EditTagRequest object from the form submission.
         public IActionResult Edit(EditTagRequest editTagRequest) 
@@ -608,18 +617,39 @@ So far the AdminTagsController.cs file looks like this:
             return RedirectToAction("Edit", new { id = editTagRequest.Id });  
         }
 
+        // DELETE FUNCTIONALITY
+        // Specifies that this action method will handle POST requests
+        [HttpPost]
+        // Defines the Delete action method, accepting an EditTagRequest object as a parameter
+        public IActionResult Delete(EditTagRequest editTagRequest) 
+        {
+            // Searches for the tag in the database using the provided ID from the editTagRequest
+            var tag = bloggieDbContext.Tags.Find(editTagRequest.Id);
+            // Checks if the tag was found in the database
+            if (tag != null)
+            {
+                // Removes the found tag from the context (i.e., marks it for deletion)
+                bloggieDbContext.Tags.Remove(tag);
+                // Saves the changes to the database (actually deletes the tag)
+                bloggieDbContext.SaveChanges();
+
+                // Show a success notification
+                // Redirects the user to the "List" action, likely to show the updated list of tags
+                return RedirectToAction("List");
+            }
+            // Show and error notification
+            // If the tag wasn't found, redirects to the "Edit" action with the same ID, indicating an error occurred
+            return RedirectToAction("Edit", new { id = editTagRequest.Id });
+        }
+
     }
 }
+
 
 <h2>Delete Functionality</h2>
 
 In the Edit.cshmtl view I made a Delete Button.
 
-<div class="mb-3">
-    <div class="d-flex">
-        <button type="submit" class="btn btn-dark">Update</button>
-        <button class="btn btn-danger ms-2" type="submit" asp-area="" asp-controller="AdminTags" asp-action="Delete">Delete</button>
-    </div>
-</div>
+
 
 
