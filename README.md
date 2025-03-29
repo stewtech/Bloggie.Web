@@ -14,7 +14,7 @@ Tagging and Categorization: Organizing posts using tags and categories to enhanc
 
 CRUD Operations in the Blog Application:
 
-CRUD operations form the backbone of the blog application's functionality:​Medium
+CRUD operations form the backbone of the blog application's functionality
 
 Create: Users can compose new blog posts by providing a title, content, and selecting relevant categories or tags. This operation involves rendering a form to the user and saving the input data to the database upon submission.​
 
