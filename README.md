@@ -613,49 +613,8 @@ So far the AdminTagsController.cs file looks like this:
 
 <h2>Delete Functionality</h2>
 
-In the Edit.cshtml view I created a Delete button to go next to the Submit button. 
-
-<div class="mb-3">
-    <div class="d-flex">
-        <button type="submit" class="btn btn-dark">Update</button>
-        <!-- Button for deleting, with danger styling (red button) and additional margin to the left (ms-2) -->
-        <!--asp-area="": This specifies the area in the application where the controller is located. In this case, it’s left empty, meaning the controller is in the default area.
-
-        asp-controller="AdminTags": This specifies the controller to be used when the button is clicked, which is AdminTags in this case.
-
-        asp-action="Delete": This specifies the action method to be invoked in the AdminTags controller when the button is clicked. The action method is Delete.-->
-        <button class="btn btn-danger ms-2" type="submit" asp-area="" asp-controller="AdminTags" asp-action="Delete">Delete</button>
-    </div>
-</div>
-
-I then made another public IActionResult method in the AdminTagsController.cs file
-
-// DELETE FUNCTIONALITY
-// Specifies that this action method will handle POST requests
-[HttpPost]
-// Defines the Delete action method, accepting an EditTagRequest object as a parameter
-public IActionResult Delete(EditTagRequest editTagRequest) 
-{
-    // Searches for the tag in the database using the provided ID from the editTagRequest
-    var tag = bloggieDbContext.Tags.Find(editTagRequest.Id);
-    // Checks if the tag was found in the database
-    if (tag != null)
-    {
-        // Removes the found tag from the context (i.e., marks it for deletion)
-        bloggieDbContext.Tags.Remove(tag);
-        // Saves the changes to the database (actually deletes the tag)
-        bloggieDbContext.SaveChanges();
-
-        // Show a success notification
-        // Redirects the user to the "List" action, likely to show the updated list of tags
-        return RedirectToAction("List");
-    }
-    // Show and error notification
-    // If the tag wasn't found, redirects to the "Edit" action with the same ID, indicating an error occurred
-    return RedirectToAction("Edit", new { id = editTagRequest.Id });
-}
 
 
-Next will be adding async functionality
+
 
 
