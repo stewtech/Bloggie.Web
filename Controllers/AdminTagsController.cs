@@ -18,7 +18,7 @@ namespace Bloggie.Web.Controllers
             this.bloggieDbContext = bloggieDbContext;
         }
         // ---------------------- CREATE FUNCTIONALITY ----------------------
-        // Create Functionality - Adding the tag in these 2 action methods
+        // CREATE FUNCTIONALITY - Adding the tag in these 2 action methods
         // Handles HTTP GET requests to display the "Add" tag form.
         // Add page and show
         [HttpGet]
@@ -49,6 +49,7 @@ namespace Bloggie.Web.Controllers
             return RedirectToAction("List");
            
         }
+        // READ FUNCTIONALITY
         // Handles HTTP GET requests to retrieve and display the list of tags from the database.
         // Create new page where I can display the list of tags coming from the database
         // Specifies that this method handles HTTP GET requests.
@@ -93,6 +94,7 @@ namespace Bloggie.Web.Controllers
             // If the tag is not found, return the view with null (likely showing an error message).
             return View(null);
         }
+        // UPDATE FUNCTIONALIY
         [HttpPost] // Specifies that this method handles HTTP POST requests.
         // Accepts an EditTagRequest object from the form submission.
         public IActionResult Edit(EditTagRequest editTagRequest) 
@@ -125,6 +127,31 @@ namespace Bloggie.Web.Controllers
             // If the tag does not exist, still redirect back to the Edit page.
             // Show error notification
             return RedirectToAction("Edit", new { id = editTagRequest.Id });  
+        }
+
+        // DELETE FUNCTIONALITY
+        // Specifies that this action method will handle POST requests
+        [HttpPost]
+        // Defines the Delete action method, accepting an EditTagRequest object as a parameter
+        public IActionResult Delete(EditTagRequest editTagRequest) 
+        {
+            // Searches for the tag in the database using the provided ID from the editTagRequest
+            var tag = bloggieDbContext.Tags.Find(editTagRequest.Id);
+            // Checks if the tag was found in the database
+            if (tag != null)
+            {
+                // Removes the found tag from the context (i.e., marks it for deletion)
+                bloggieDbContext.Tags.Remove(tag);
+                // Saves the changes to the database (actually deletes the tag)
+                bloggieDbContext.SaveChanges();
+
+                // Show a success notification
+                // Redirects the user to the "List" action, likely to show the updated list of tags
+                return RedirectToAction("List");
+            }
+            // Show and error notification
+            // If the tag wasn't found, redirects to the "Edit" action with the same ID, indicating an error occurred
+            return RedirectToAction("Edit", new { id = editTagRequest.Id });
         }
 
     }
