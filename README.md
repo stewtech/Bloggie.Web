@@ -656,4 +656,6 @@ public IActionResult Delete(EditTagRequest editTagRequest)
 }
 
 
+Next will be adding async functionality
+
 
