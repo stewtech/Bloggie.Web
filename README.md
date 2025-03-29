@@ -645,10 +645,19 @@ namespace Bloggie.Web.Controllers
     }
 }
 
+<div class="mb-3">
+    <div class="d-flex">
+        <button type="submit" class="btn btn-dark">Update</button>
+        <!-- Button for deleting, with danger styling (red button) and additional margin to the left (ms-2) -->
+        <!--asp-area="": This specifies the area in the application where the controller is located. In this case, it’s left empty, meaning the controller is in the default area.
 
-<h2>Delete Functionality</h2>
+        asp-controller="AdminTags": This specifies the controller to be used when the button is clicked, which is AdminTags in this case.
 
-In the Edit.cshmtl view I made a Delete Button.
+        asp-action="Delete": This specifies the action method to be invoked in the AdminTags controller when the button is clicked. The action method is Delete.-->
+        <button class="btn btn-danger ms-2" type="submit" asp-area="" asp-controller="AdminTags" asp-action="Delete">Delete</button>
+    </div>
+</div>
+
 
 
 
