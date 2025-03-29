@@ -613,7 +613,7 @@ So far the AdminTagsController.cs file looks like this:
 
 <h2>Delete Functionality</h2>
 
-
+In the Edit.cshmtl view I made a Delete Button.
 
 
 
