@@ -26,15 +26,13 @@ Delete: Users can remove their own posts when desired. This operation typically 
 
 Implementation Details:
 
-Models: Define classes representing the data structure of your application, such as Post, Comment, Category, and User. These models correspond to database tables and are used by Entity Framework Core to interact with the database.​
+Models: I define classes that represent the data structure of my application, such as Post, Comment, Category, and User. These models correspond to database tables and allow me to use Entity Framework Core to interact with the database.
 
 Controllers: Handle incoming HTTP requests, process user input, and return appropriate responses. For example, a PostsController would manage actions related to creating, reading, updating, and deleting blog posts.​
 
 Views: Provide the user interface for the application. Views are responsible for rendering HTML pages that users interact with, such as forms for creating or editing posts and pages displaying lists of posts.
 
-Model-View-Controller pattern
-Entity Framework Core with code-first migrations and LINQ queries
-ASP.NET Core Identity managing authentication and authorization with customizable user roles
+
 
 I have used Visual Studio 2022 Community Edition to build this along with MS SQL / SQL Server Management Studio version 19
 
