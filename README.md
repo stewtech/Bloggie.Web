@@ -274,11 +274,56 @@ So I mapped the AddTagRequest to Tag domain Model
 
 Then I supplied the tag variable into the Add() method
 
-Now bloggieDbContext will be able to create the tag inside the Tags table in the database
+Now bloggieDbContext will be able to create the tag inside the Tags table in the database (Create Functionality)
+
+// Create Functionality - Adding the tag in these 2 action methods
+// Add page and show
+[HttpGet]
+public IActionResult Add()
+{
+    return View();
+}
+// Capture details and post the tag to save to the database
+[HttpPost]
+[ActionName("Add")]
+public IActionResult Add(AddTagRequest addTagRequest)
+{
+    // Mapping AddTagRequest to Tag domain model
+
+    var tag = new Tag
+    {
+        Name = addTagRequest.Name,
+        DisplayName = addTagRequest.DisplayName
+    };
+
+    bloggieDbContext.Tags.Add(tag);
+    bloggieDbContext.SaveChanges();
+    return RedirectToAction("List");
+    // After saving the user will get redirected to the list page.
+}
 
 Then I added the SaveChanges() to save changes to the database
 
 bloggieDbContext.SaveChanges();
+
+Next, I want to be able to read all the records from the tag table and show them in a list in a Bootstrap table
+
+Within the AdminTagsController.cs file, this files will be responsible for all the CRUD operations
+
+I created a page where I can display the list of tags coming from the database (will read from database and show a list)
+
+ // Create new page where I can display the list of tags coming from the database
+ [HttpGet]
+ [ActionName("List")]
+ public IActionResult List()
+ {
+     // use dbcontext to read the tags
+     var tags = bloggieDbContext.Tags.ToList();
+
+     return View(tags);
+ }
+
+ 
 
 
 
