@@ -647,7 +647,7 @@ namespace Bloggie.Web.Controllers
 
 I then mad a Delete Button in the Edit.cshtml view file and added some razor code. 
 
-<button class="btn btn-danger ms-2" type="submit" asp-area="" asp-controller="AdminTags" asp-action="Delete">Delete</button>
+Next, I will add async functionality.
 
 
 
