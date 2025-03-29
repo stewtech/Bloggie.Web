@@ -1,6 +1,4 @@
-Bloggie.Web is a ASP.NET CORE MVC USING .NET 8 BLOG WEBSITE.
-
-I am building a .NET 8 ASP.NET CORE MVC web app Blog that will involve the following:
+<h1>Bloggie.Web is a .NET 8 ASP.NET Core MVC blog website that I am building, which will involve the following:</H1>
 
 Overview of the Blog Application:
 
@@ -16,7 +14,7 @@ Tagging and Categorization: Organizing posts using tags and categories to enhanc
 
 CRUD Operations in the Blog Application:
 
-CRUD operations form the backbone of the blog application's functionality:​Medium
+CRUD operations form the backbone of the blog application's functionality
 
 Create: Users can compose new blog posts by providing a title, content, and selecting relevant categories or tags. This operation involves rendering a form to the user and saving the input data to the database upon submission.​
 
@@ -28,17 +26,17 @@ Delete: Users can remove their own posts when desired. This operation typically 
 
 Implementation Details:
 
-Models: Define classes representing the data structure of your application, such as Post, Comment, Category, and User. These models correspond to database tables and are used by Entity Framework Core to interact with the database.​
+Models: I define classes that represent the data structure of my application, such as Post, Comment, Category, and User. These models correspond to database tables and allow me to use Entity Framework Core to interact with the database.
 
 Controllers: Handle incoming HTTP requests, process user input, and return appropriate responses. For example, a PostsController would manage actions related to creating, reading, updating, and deleting blog posts.​
 
 Views: Provide the user interface for the application. Views are responsible for rendering HTML pages that users interact with, such as forms for creating or editing posts and pages displaying lists of posts.
 
-Model-View-Controller pattern
-Entity Framework Core with code-first migrations and LINQ queries
-ASP.NET Core Identity managing authentication and authorization with customizable user roles
+
 
 I have used Visual Studio 2022 Community Edition to build this along with MS SQL / SQL Server Management Studio version 19
+
+<h1>Code Walk Through</h1>
 
 I created domain models called Blogpost.cs and Tag.cs
 
@@ -276,11 +274,56 @@ So I mapped the AddTagRequest to Tag domain Model
 
 Then I supplied the tag variable into the Add() method
 
-Now bloggieDbContext will be able to create the tag inside the Tags table in the database
+Now bloggieDbContext will be able to create the tag inside the Tags table in the database (Create Functionality)
+
+// Create Functionality - Adding the tag in these 2 action methods
+// Add page and show
+[HttpGet]
+public IActionResult Add()
+{
+    return View();
+}
+// Capture details and post the tag to save to the database
+[HttpPost]
+[ActionName("Add")]
+public IActionResult Add(AddTagRequest addTagRequest)
+{
+    // Mapping AddTagRequest to Tag domain model
+
+    var tag = new Tag
+    {
+        Name = addTagRequest.Name,
+        DisplayName = addTagRequest.DisplayName
+    };
+
+    bloggieDbContext.Tags.Add(tag);
+    bloggieDbContext.SaveChanges();
+    return RedirectToAction("List");
+    // After saving the user will get redirected to the list page.
+}
 
 Then I added the SaveChanges() to save changes to the database
 
 bloggieDbContext.SaveChanges();
+
+Next, I want to be able to read all the records from the tag table and show them in a list in a Bootstrap table
+
+Within the AdminTagsController.cs file, this files will be responsible for all the CRUD operations
+
+I created a page where I can display the list of tags coming from the database (will read from database and show a list)
+
+ // Create new page where I can display the list of tags coming from the database
+ [HttpGet]
+ [ActionName("List")]
+ public IActionResult List()
+ {
+     // use dbcontext to read the tags
+     var tags = bloggieDbContext.Tags.ToList();
+
+     return View(tags);
+ }
+
+ 
 
 
 
