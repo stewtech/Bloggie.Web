@@ -274,7 +274,9 @@ So I mapped the AddTagRequest to Tag domain Model
 
 Then I supplied the tag variable into the Add() method
 
-Now bloggieDbContext will be able to create the tag inside the Tags table in the database (Create Functionality)
+<h2>(Create Functionality)</h2>
+
+Now bloggieDbContext will be able to create the tag inside the Tags table in the database 
 
 // Create Functionality - Adding the tag in these 2 action methods
 // Add page and show
@@ -312,7 +314,9 @@ Within the AdminTagsController.cs file, this files will be responsible for all t
 
 I created a page where I can display the list of tags coming from the database (will read from database and show a list)
 
- // Create new page where I can display the list of tags coming from the database
+<h2>(Read Functionality)</h2>
+
+ // Create new page where I can display the list of tags coming from the database 
  [HttpGet]
  [ActionName("List")]
  public IActionResult List()
@@ -323,7 +327,7 @@ I created a page where I can display the list of tags coming from the database (
      return View(tags);
  }
 
- 
+ <h2>(Update Functionality)</h2>
 
 
 
