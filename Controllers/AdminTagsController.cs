@@ -5,76 +5,92 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bloggie.Web.Controllers
 {
-   
+    // Defines the AdminTagsController, which inherits from the base Controller class.
     public class AdminTagsController : Controller
     {
+        // Declares a private readonly field for BloggieDbContext to interact with the database.
         private readonly BloggieDbContext bloggieDbContext;
+        // Constructor to initialize the BloggieDbContext instance via dependency injection.
 
         public AdminTagsController(BloggieDbContext bloggieDbContext)
         {
+            // Assigns the injected database context to the private field.
             this.bloggieDbContext = bloggieDbContext;
         }
+        // ---------------------- CREATE FUNCTIONALITY ----------------------
         // Create Functionality - Adding the tag in these 2 action methods
+        // Handles HTTP GET requests to display the "Add" tag form.
         // Add page and show
         [HttpGet]
         public IActionResult Add()
         {
+            // Returns the "Add" view, which contains the tag creation form.
             return View();
         }
-        // Capture details and post the tag to save to the database
-        [HttpPost]
-        [ActionName("Add")]
+        // Handles HTTP POST requests to capture form data and save the tag to the database.
+        [HttpPost] // Marks this method as handling POST requests.
+        [ActionName("Add")] // Ensures this method is mapped to the "Add" action.
+        // Accepts user input from the form.
         public IActionResult Add(AddTagRequest addTagRequest)
         {
-            // Mapping AddTagRequest to Tag domain model
+            // Mapping AddTagRequest (DTO) to Tag (domain model).
 
             var tag = new Tag
             {
+                // Assigns the name entered by the user.
                 Name = addTagRequest.Name,
-                DisplayName = addTagRequest.DisplayName
+                DisplayName = addTagRequest.DisplayName  // Assigns the display name entered by the user.
             };
-
+            // Adds the new tag to the database.
             bloggieDbContext.Tags.Add(tag);
+            // Saves changes to the database to persist the new tag.
             bloggieDbContext.SaveChanges();
+            // Redirects the user to the "List" page after successfully saving the tag.
             return RedirectToAction("List");
-            // After saving the user will get redirected to the list page.
+           
         }
-
+        // Handles HTTP GET requests to retrieve and display the list of tags from the database.
         // Create new page where I can display the list of tags coming from the database
-        [HttpGet]
-        [ActionName("List")]
+        // Specifies that this method handles HTTP GET requests.
+        [HttpGet] // Marks this method as handling GET requests.
+        [ActionName("List")] // Maps this action method to the "List" route.
         public IActionResult List()
         {
-            // use dbcontext to read the tags
+            // Retrieves all tags from the database and converts them into a list.
             var tags = bloggieDbContext.Tags.ToList();
-
+            // Passes the retrieved tags to the "List" view for display.
             return View(tags);
         }
-
+        //READ Fuctionality
         // Create get method
-        [HttpGet]
+        [HttpGet] // Specifies that this method handles HTTP GET requests.
         // Parameter has to match the name of the route created
+        // Accepts a tag ID as a parameter from the URL.
         public IActionResult Edit(Guid id) 
-        { 
+        {
             // Use bloggieDbContext to connect to database to read details to display on screen and allow user to update or edit details
             //1st method var tag = bloggieDbContext.Tags.Find(id);
             //2nd method will find the tag using the id and the first one it finds it will give it back
+            // Search for a tag in the database by its ID.
+            // If a match is found, it returns the first occurrence; otherwise, it returns null.
             var tag = bloggieDbContext.Tags.FirstOrDefault(x => x.Id == id);
 
+            // If the tag exists, prepare an object for the view.
             // display tag into edit page
             if (tag != null) 
             {
+                // Create an EditTagRequest object and populate it with the tag's existing details.
                 var editTagRequest = new EditTagRequest
                 {
-                    Id = tag.Id,
-                    Name = tag.Name,
-                    DisplayName = tag.DisplayName
+                    Id = tag.Id, // Assigns the ID.
+                    Name = tag.Name, // Assigns the name.
+                    DisplayName = tag.DisplayName // Assigns the display name.
                 };
-
+                // Pass the populated EditTagRequest object to the "Edit" view.
                 return View(editTagRequest);
 
             }
-
+            // If the tag is not found, return the view with null (likely showing an error message).
             return View(null);
         }
         [HttpPost] // Specifies that this method handles HTTP POST requests.
