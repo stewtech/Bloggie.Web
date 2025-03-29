@@ -14,13 +14,14 @@ namespace Bloggie.Web.Controllers
         {
             this.bloggieDbContext = bloggieDbContext;
         }
-
+        // Create Functionality - Adding the tag in these 2 action methods
+        // Add page and show
         [HttpGet]
         public IActionResult Add()
         {
             return View();
         }
-
+        // Capture details and post the tag to save to the database
         [HttpPost]
         [ActionName("Add")]
         public IActionResult Add(AddTagRequest addTagRequest)
@@ -35,7 +36,19 @@ namespace Bloggie.Web.Controllers
 
             bloggieDbContext.Tags.Add(tag);
             bloggieDbContext.SaveChanges();
-            return View("Add");
+            return RedirectToAction("List");
+            // After saving the user will get redirected to the list page.
+        }
+
+        // Create new page where I can display the list of tags coming from the database
+        [HttpGet]
+        [ActionName("List")]
+        public IActionResult List()
+        {
+            // use dbcontext to read the tags
+            var tags = bloggieDbContext.Tags.ToList();
+
+            return View(tags);
         }
     }
 }
