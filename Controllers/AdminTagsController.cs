@@ -1,6 +1,7 @@
 ﻿using Bloggie.Web.Data;
 using Bloggie.Web.Models.Domain;
 using Bloggie.Web.Models.ViewModels;
+using Bloggie.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,14 +10,11 @@ namespace Bloggie.Web.Controllers
     // Defines the AdminTagsController, which inherits from the base Controller class.
     public class AdminTagsController : Controller
     {
-        // Declares a private readonly field for BloggieDbContext to interact with the database.
-        private readonly BloggieDbContext bloggieDbContext;
-        // Constructor to initialize the BloggieDbContext instance via dependency injection.
+        private readonly ITagRepository tagRepository;
 
-        public AdminTagsController(BloggieDbContext bloggieDbContext)
+        public AdminTagsController(ITagRepository tagRepository)
         {
-            // Assigns the injected database context to the private field.
-            this.bloggieDbContext = bloggieDbContext;
+            this.tagRepository = tagRepository;
         }
         // ---------------------- CREATE FUNCTIONALITY ----------------------
         // CREATE FUNCTIONALITY - Adding the tag in these 2 action methods
@@ -42,10 +40,13 @@ namespace Bloggie.Web.Controllers
                 Name = addTagRequest.Name,
                 DisplayName = addTagRequest.DisplayName  // Assigns the display name entered by the user.
             };
-            // Adds the new tag to the database.
-            await bloggieDbContext.Tags.AddAsync(tag);
-            // Saves changes to the database to persist the new tag.
-            await bloggieDbContext.SaveChangesAsync();
+            // Adds a new tag entity to the database using the tagRepository,  
+            // which is an instance of a repository that manages Tag entities.  
+            // Calls the AddAsync method, which is responsible for inserting a new record into the database.  
+            // Uses await to asynchronously wait for the operation to complete before proceeding.  
+            // This prevents blocking the main thread and improves performance.  
+            await tagRepository.AddAsync(tag);
+
             // Redirects the user to the "List" page after successfully saving the tag.
             return RedirectToAction("List");
            
@@ -59,7 +60,7 @@ namespace Bloggie.Web.Controllers
         public async Task<IActionResult> List()
         {
             // Retrieves all tags from the database and converts them into a list.
-            var tags = await bloggieDbContext.Tags.ToListAsync();
+            var tags = await tagRepository.GetAllAsync();
             // Passes the retrieved tags to the "List" view for display.
             return View(tags);
         }
@@ -70,12 +71,7 @@ namespace Bloggie.Web.Controllers
         // Accepts a tag ID as a parameter from the URL.
         public async Task<IActionResult> Edit(Guid id) 
         {
-            // Use bloggieDbContext to connect to database to read details to display on screen and allow user to update or edit details
-            //1st method var tag = bloggieDbContext.Tags.Find(id);
-            //2nd method will find the tag using the id and the first one it finds it will give it back
-            // Search for a tag in the database by its ID.
-            // If a match is found, it returns the first occurrence; otherwise, it returns null.
-            var tag = await bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.Id == id);
+           var tag = await tagRepository.GetAsync(id);
 
             // If the tag exists, prepare an object for the view.
             // display tag into edit page
@@ -107,27 +103,21 @@ namespace Bloggie.Web.Controllers
                 Name = editTagRequest.Name,
                 DisplayName = editTagRequest.DisplayName
             };
-            // Find the existing tag in the database using the provided ID.
-            var existingTag = await bloggieDbContext.Tags.FindAsync(tag.Id);
-            // It queries the bloggieDbContext.Tags table to find a tag with the given Id.
-            // Check if the existing tag was found
-            if (existingTag != null)
+           
+            var updatedTag = await tagRepository.UpdateAsync(tag);
+
+            if (updatedTag != null)
             {
-                // Update the existing tag's Name and DisplayName with the new values.
-                existingTag.Name = tag.Name;
-                existingTag.DisplayName = tag.DisplayName;
-
-                // Save the updated tag details to the database.
-                await bloggieDbContext.SaveChangesAsync();
-
-                // Redirect back to the Edit page for the given tag ID.
                 // Show success notification
-                return RedirectToAction("Edit", new { id = editTagRequest.Id });
-               
             }
-            // If the tag does not exist, still redirect back to the Edit page.
-            // Show error notification
-            return RedirectToAction("Edit", new { id = editTagRequest.Id });  
+            else
+            {
+                // Show error notification
+            }
+
+                // If the tag does not exist, still redirect back to the Edit page.
+                // Show error notification
+                return RedirectToAction("Edit", new { id = editTagRequest.Id });  
         }
 
         // DELETE FUNCTIONALITY
@@ -136,20 +126,15 @@ namespace Bloggie.Web.Controllers
         // Defines the Delete action method, accepting an EditTagRequest object as a parameter
         public async Task<IActionResult> Delete(EditTagRequest editTagRequest) 
         {
-            // Searches for the tag in the database using the provided ID from the editTagRequest
-            var tag = await bloggieDbContext.Tags.FindAsync(editTagRequest.Id);
-            // Checks if the tag was found in the database
-            if (tag != null)
-            {
-                // Removes the found tag from the context (i.e., marks it for deletion)
-                bloggieDbContext.Tags.Remove(tag);
-                // Saves the changes to the database (actually deletes the tag)
-                await bloggieDbContext.SaveChangesAsync();
 
-                // Show a success notification
-                // Redirects the user to the "List" action, likely to show the updated list of tags
+            var deletedTag = await tagRepository.DeleteAsync(editTagRequest.Id);
+
+            if (deletedTag != null)
+            {
+                // Show success notification
                 return RedirectToAction("List");
             }
+            
             // Show and error notification
             // If the tag wasn't found, redirects to the "Edit" action with the same ID, indicating an error occurred
             return RedirectToAction("Edit", new { id = editTagRequest.Id });

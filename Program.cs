@@ -1,4 +1,5 @@
 using Bloggie.Web.Data;
+using Bloggie.Web.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,10 @@ builder.Services.AddControllersWithViews();
 //Dependency Injection
 builder.Services.AddDbContext<BloggieDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("BloggieDbConnectionString")));
+
+// Inject the ITagRepository into the services
+// When someone calls the ITagRepository add a injection inside the services, give them the implementation of the interface.
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 var app = builder.Build();
 
