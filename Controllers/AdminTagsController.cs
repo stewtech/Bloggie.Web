@@ -2,6 +2,7 @@
 using Bloggie.Web.Models.Domain;
 using Bloggie.Web.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bloggie.Web.Controllers
 {
@@ -31,7 +32,7 @@ namespace Bloggie.Web.Controllers
         [HttpPost] // Marks this method as handling POST requests.
         [ActionName("Add")] // Ensures this method is mapped to the "Add" action.
         // Accepts user input from the form.
-        public IActionResult Add(AddTagRequest addTagRequest)
+        public async Task<IActionResult> Add(AddTagRequest addTagRequest)
         {
             // Mapping AddTagRequest (DTO) to Tag (domain model).
 
@@ -42,9 +43,9 @@ namespace Bloggie.Web.Controllers
                 DisplayName = addTagRequest.DisplayName  // Assigns the display name entered by the user.
             };
             // Adds the new tag to the database.
-            bloggieDbContext.Tags.Add(tag);
+            await bloggieDbContext.Tags.AddAsync(tag);
             // Saves changes to the database to persist the new tag.
-            bloggieDbContext.SaveChanges();
+            await bloggieDbContext.SaveChangesAsync();
             // Redirects the user to the "List" page after successfully saving the tag.
             return RedirectToAction("List");
            
@@ -55,10 +56,10 @@ namespace Bloggie.Web.Controllers
         // Specifies that this method handles HTTP GET requests.
         [HttpGet] // Marks this method as handling GET requests.
         [ActionName("List")] // Maps this action method to the "List" route.
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {
             // Retrieves all tags from the database and converts them into a list.
-            var tags = bloggieDbContext.Tags.ToList();
+            var tags = await bloggieDbContext.Tags.ToListAsync();
             // Passes the retrieved tags to the "List" view for display.
             return View(tags);
         }
@@ -67,14 +68,14 @@ namespace Bloggie.Web.Controllers
         [HttpGet] // Specifies that this method handles HTTP GET requests.
         // Parameter has to match the name of the route created
         // Accepts a tag ID as a parameter from the URL.
-        public IActionResult Edit(Guid id) 
+        public async Task<IActionResult> Edit(Guid id) 
         {
             // Use bloggieDbContext to connect to database to read details to display on screen and allow user to update or edit details
             //1st method var tag = bloggieDbContext.Tags.Find(id);
             //2nd method will find the tag using the id and the first one it finds it will give it back
             // Search for a tag in the database by its ID.
             // If a match is found, it returns the first occurrence; otherwise, it returns null.
-            var tag = bloggieDbContext.Tags.FirstOrDefault(x => x.Id == id);
+            var tag = await bloggieDbContext.Tags.FirstOrDefaultAsync(x => x.Id == id);
 
             // If the tag exists, prepare an object for the view.
             // display tag into edit page
@@ -97,7 +98,7 @@ namespace Bloggie.Web.Controllers
         // UPDATE FUNCTIONALIY
         [HttpPost] // Specifies that this method handles HTTP POST requests.
         // Accepts an EditTagRequest object from the form submission.
-        public IActionResult Edit(EditTagRequest editTagRequest) 
+        public async Task<IActionResult> Edit(EditTagRequest editTagRequest) 
         {
             // Create a new Tag object using values from the editTagRequest
             var tag = new Tag
@@ -107,7 +108,7 @@ namespace Bloggie.Web.Controllers
                 DisplayName = editTagRequest.DisplayName
             };
             // Find the existing tag in the database using the provided ID.
-            var existingTag = bloggieDbContext.Tags.Find(tag.Id);
+            var existingTag = await bloggieDbContext.Tags.FindAsync(tag.Id);
             // It queries the bloggieDbContext.Tags table to find a tag with the given Id.
             // Check if the existing tag was found
             if (existingTag != null)
@@ -117,7 +118,7 @@ namespace Bloggie.Web.Controllers
                 existingTag.DisplayName = tag.DisplayName;
 
                 // Save the updated tag details to the database.
-                bloggieDbContext.SaveChanges();
+                await bloggieDbContext.SaveChangesAsync();
 
                 // Redirect back to the Edit page for the given tag ID.
                 // Show success notification
@@ -133,17 +134,17 @@ namespace Bloggie.Web.Controllers
         // Specifies that this action method will handle POST requests
         [HttpPost]
         // Defines the Delete action method, accepting an EditTagRequest object as a parameter
-        public IActionResult Delete(EditTagRequest editTagRequest) 
+        public async Task<IActionResult> Delete(EditTagRequest editTagRequest) 
         {
             // Searches for the tag in the database using the provided ID from the editTagRequest
-            var tag = bloggieDbContext.Tags.Find(editTagRequest.Id);
+            var tag = await bloggieDbContext.Tags.FindAsync(editTagRequest.Id);
             // Checks if the tag was found in the database
             if (tag != null)
             {
                 // Removes the found tag from the context (i.e., marks it for deletion)
                 bloggieDbContext.Tags.Remove(tag);
                 // Saves the changes to the database (actually deletes the tag)
-                bloggieDbContext.SaveChanges();
+                await bloggieDbContext.SaveChangesAsync();
 
                 // Show a success notification
                 // Redirects the user to the "List" action, likely to show the updated list of tags
