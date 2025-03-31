@@ -647,7 +647,7 @@ namespace Bloggie.Web.Controllers
 
 I then made a Delete Button in the Edit.cshtml view file and added some razor code. 
 
-Next, I will add async functionality to the methods.
+Next, I will add async functionality to the methods in the AdminTagsController.cs file. 
 
 
 
