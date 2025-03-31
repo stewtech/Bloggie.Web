@@ -766,5 +766,8 @@ You can introduce an interface (IRepository<T>), making it easy to swap out impl
 7. Simplified Data Caching and Logging
 If you need caching, logging, or performance optimizations, you can implement them inside the repository layer instead of modifying multiple controllers.
 
+I then created a Interface in a new folder called Repositories.
+
+
 
 
