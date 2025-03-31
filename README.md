@@ -645,9 +645,91 @@ namespace Bloggie.Web.Controllers
     }
 }
 
-I then mad a Delete Button in the Edit.cshtml view file and added some razor code. 
+I then made a Delete Button in the Edit.cshtml view file and added some razor code. 
 
-Next, I will add async functionality.
+Next, I will add async functionality to the methods in the AdminTagsController.cs file. 
+
+I also wrapped my form in Edit.cshtml inside a If/Else statment to check if the Model is null or not.
+
+Prevents Null Reference Exceptions
+If the Model is null and your view attempts to access properties of the Model, it can cause a runtime exception. Using an if statement ensures that the form is only rendered when the Model contains data.
+
+Improves Code Maintainability
+Keeping explicit control over when a form should be displayed makes it easier for other developers (or your future self) to understand the intended behavior of the page.
+
+Prevents Unintended Submissions
+If a form is rendered with a null Model, the user might submit it with incomplete or invalid data. By conditionally displaying the form, you can ensure that users only interact with the form when it's meaningful.
+
+Better Error Handling
+Instead of letting the application fail due to null values, you can display a helpful error message or redirect users to an appropriate page.
+
+This approach ensures that the form is only shown when the Model is available, avoiding potential errors and improving the user experience.
+
+This should be done when:
+
+When the Model Is Expected to Be Required for the Form
+If the form is meant to edit an existing entity (like updating a blog post), but the Model is null, the form should not be shown.
+
+Example: Editing a blog post that doesn’t exist in the database.
+
+When Rendering Model Data Inside the Form
+If your form fields are pre-filled with Model properties, a null Model could cause an exception.
+
+When Preventing Submissions with Invalid or Missing Data
+If the form depends on required data, hiding it prevents users from submitting incomplete forms.
+
+Example: Preventing a user from submitting a form if the necessary data is not loaded.
+
+When the Model Is Fetched Dynamically
+If the Model is retrieved from a database or API call and might not always be available.
+
+Example: A user tries to access an edit page for a blog post that has been deleted.
+
+When Handling Edge Cases
+If certain conditions cause the Model to be null, such as incorrect URLs, missing parameters, or user permissions.
+
+How to Know When NOT to Do This?
+If your form is for creating a new entry (like a new blog post), checking for null isn’t necessary since the form fields will be empty anyway.
+
+If the form doesn’t depend on the Model at all (e.g., a basic contact form), you don’t need to check.
+
+ @if (Model != null)
+ {
+     <form method="post">
+
+         <div class="mb-3">
+             <label class="form-label">Id</label>
+             <input type="text" id="id" class="form-control" asp-for="Id" readonly />
+         </div>
+         <div class="mb-3">
+             <label class="form-label">Name</label>
+             <input type="text" id="Name" class="form-control" asp-for="Name" />
+         </div>
+         <div class="mb-3">
+             <label class="form-label">Display Name</label>
+             <input type="text" id="displayName" class="form-control" asp-for="DisplayName" />
+         </div>
+
+         <div class="mb-3">
+             <div class="d-flex">
+                 <button type="submit" class="btn btn-dark">Update</button>
+                 <!-- Button for deleting, with danger styling (red button) and additional margin to the left (ms-2) -->
+                 <!--asp-area="": This specifies the area in the application where the controller is located. In this case, it’s left empty, meaning the controller is in the default area.
+
+                 asp-controller="AdminTags": This specifies the controller to be used when the button is clicked, which is AdminTags in this case.
+
+                 asp-action="Delete": This specifies the action method to be invoked in the AdminTags controller when the button is clicked. The action method is Delete.-->
+                 <button class="btn btn-danger ms-2" type="submit" asp-area="" asp-controller="AdminTags" asp-action="Delete">Delete</button>
+             </div>
+         </div>
+     </form>
+ }
+ else
+ {
+     <p>Tag Not Found!</p>
+ }
+
+
 
 
 
