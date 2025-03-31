@@ -772,7 +772,7 @@ using Bloggie.Web.Models.Domain;
 
 namespace Bloggie.Web.Repositories
 {
-    public interface ITagInterface
+    public interface ITagRepository
     {
         // Create definitions/Methods for CRUD operations
         Task<IEnumerable<Tag>> GetAllAsync();
@@ -790,13 +790,13 @@ namespace Bloggie.Web.Repositories
 
 Then I created a class inside the Repositories folder called TagRepository.cs
 
-Then I inherited from the ITagInterface, all the methods within it. 
+Then I inherited from the ITagRepository, all the methods within it. 
 
 using Bloggie.Web.Models.Domain;
 
 namespace Bloggie.Web.Repositories
 {
-    public class TagRepository : ITagInterface
+    public class TagRepository : ITagRepository
     {
     
         public Task<Tag> AddAsync(Tag tag)
@@ -826,9 +826,31 @@ namespace Bloggie.Web.Repositories
     }
 }
 
+Next, I created a class called Repository within the Repositories folder.
 
+It inherites from the ITagRepository.
 
+I made a constructor that has a parameter of bloggieDbContext
 
+  private readonly BloggieDbContext bloggieDbContext;
+
+  public TagRepository(BloggieDbContext bloggieDbContext)
+  {
+      this.bloggieDbContext = bloggieDbContext;
+  }
+
+Within the first method in the TagRepository file I moved the code that accesses the database from the Add method in the AdminTagsController.cs file. 
+
+  public async Task<Tag> AddAsync(Tag tag)
+  {
+      // Adds the new tag to the database.
+      await bloggieDbContext.Tags.AddAsync(tag);
+      // Saves changes to the database to persist the new tag.
+      await bloggieDbContext.SaveChangesAsync();
+      return tag;
+  }
+
+  
 
 
 
