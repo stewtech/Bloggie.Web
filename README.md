@@ -853,7 +853,7 @@ Within the first method in the TagRepository file I moved the code that accesses
 
 I then need to call the Repository inside the AdminTagsController.cs file
 
-I need to inject the ITagRepository instead of bloggieDbContext
+I need to inject the ITagRepository instead of bloggieDbContext by using constructor injection
 
 namespace Bloggie.Web.Controllers
 {
