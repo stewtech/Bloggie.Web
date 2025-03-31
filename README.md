@@ -649,7 +649,7 @@ I then made a Delete Button in the Edit.cshtml view file and added some razor co
 
 Next, I will add async functionality to the methods in the AdminTagsController.cs file. 
 
-I also wrapped my form in Edit.cshtml inside a If/Else statment.
+I also wrapped my form in Edit.cshtml inside a If/Else statment to check if the Model is null or not.
 
  @if (Model != null)
  {
