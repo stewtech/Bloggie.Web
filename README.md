@@ -649,6 +649,44 @@ I then made a Delete Button in the Edit.cshtml view file and added some razor co
 
 Next, I will add async functionality to the methods in the AdminTagsController.cs file. 
 
+I also wrapped my form in Edit.cshtml inside a If/Else statment.
+
+ @if (Model != null)
+ {
+     <form method="post">
+
+         <div class="mb-3">
+             <label class="form-label">Id</label>
+             <input type="text" id="id" class="form-control" asp-for="Id" readonly />
+         </div>
+         <div class="mb-3">
+             <label class="form-label">Name</label>
+             <input type="text" id="Name" class="form-control" asp-for="Name" />
+         </div>
+         <div class="mb-3">
+             <label class="form-label">Display Name</label>
+             <input type="text" id="displayName" class="form-control" asp-for="DisplayName" />
+         </div>
+
+         <div class="mb-3">
+             <div class="d-flex">
+                 <button type="submit" class="btn btn-dark">Update</button>
+                 <!-- Button for deleting, with danger styling (red button) and additional margin to the left (ms-2) -->
+                 <!--asp-area="": This specifies the area in the application where the controller is located. In this case, it’s left empty, meaning the controller is in the default area.
+
+                 asp-controller="AdminTags": This specifies the controller to be used when the button is clicked, which is AdminTags in this case.
+
+                 asp-action="Delete": This specifies the action method to be invoked in the AdminTags controller when the button is clicked. The action method is Delete.-->
+                 <button class="btn btn-danger ms-2" type="submit" asp-area="" asp-controller="AdminTags" asp-action="Delete">Delete</button>
+             </div>
+         </div>
+     </form>
+ }
+ else
+ {
+     <p>Tag Not Found!</p>
+ }
+
 
 
 
