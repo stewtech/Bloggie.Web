@@ -857,7 +857,9 @@ I need to inject the ITagRepository instead of bloggieDbContext
 
 namespace Bloggie.Web.Controllers
 {
+
     // Defines the AdminTagsController, which inherits from the base Controller class.
+    
     public class AdminTagsController : Controller
     {
         private readonly ITagRepository tagRepository;
