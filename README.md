@@ -768,6 +768,32 @@ If you need caching, logging, or performance optimizations, you can implement th
 
 I then created a Interface in a new folder called Repositories.
 
+using Bloggie.Web.Models.Domain;
+
+namespace Bloggie.Web.Repositories
+{
+    public interface ITagInterface
+    {
+        // Create definitions/Methods for CRUD operations
+        Task<IEnumerable<Tag>> GetAllAsync();
+
+        Task<Tag?> GetAsync(Guid id);
+
+        Task<Tag> AddAsync(Tag tag);
+
+        Task<Tag?> UpdateAsync(Tag tag);
+
+        Task<Tag?> DeleteAsync(Guid id);
+
+    }
+}
+
+Then I created a class inside the Repositories folder called TagRepository.cs
+
+Then I inherited from the ITagInterface, all the methods within it. 
+
+
+
 
 
 
