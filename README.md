@@ -850,7 +850,22 @@ Within the first method in the TagRepository file I moved the code that accesses
       return tag;
   }
 
-  
+
+I then need to call the Repository inside the AdminTagsController.cs file
+
+I need to inject the ITagRepository instead of bloggieDbContext
+
+namespace Bloggie.Web.Controllers
+{
+    // Defines the AdminTagsController, which inherits from the base Controller class.
+    public class AdminTagsController : Controller
+    {
+        private readonly ITagRepository tagRepository;
+
+        public AdminTagsController(ITagRepository tagRepository)
+        {
+            this.tagRepository = tagRepository;
+        }
 
 
 
