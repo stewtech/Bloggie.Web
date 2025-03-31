@@ -870,4 +870,8 @@ namespace Bloggie.Web.Controllers
         }
 
 
+Now the controller is calling the repository and the respositories job is to call the DbContext and call the Database.
+
+
+
 
