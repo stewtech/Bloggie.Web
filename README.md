@@ -729,7 +729,148 @@ If the form doesn’t depend on the Model at all (e.g., a basic contact form), y
      <p>Tag Not Found!</p>
  }
 
+Next, I will add the Repsitory Pattern
 
+The Repository Pattern in an ASP.NET Core MVC .NET 8 blog project improves maintainability, testability, and flexibility by decoupling the data access layer from the business logic. It also enhances code reuse and makes it easier to manage changes in the future.
+
+Why should the Repository Pattern be used?
+
+1. Separation of Concerns
+Keeps the data access logic separate from the business logic in controllers and services.
+
+Makes the application more organized and maintainable.
+
+2. Encapsulation of Data Access Logic
+Centralizes data queries and CRUD operations in one place.
+
+If you need to change your database provider (e.g., switching from SQL Server to PostgreSQL), you only need to modify the repository layer.
+
+3. Improved Testability
+By abstracting data access, you can mock repositories in unit tests instead of relying on an actual database.
+
+Makes testing easier and faster compared to integration tests that hit a real database.
+
+4. Decoupling from EF Core
+If you directly use Entity Framework Core (EF Core) in controllers, your business logic becomes tightly coupled to it.
+
+Using a repository pattern reduces this dependency, allowing easier migration or changes in ORM frameworks.
+
+5. Better Code Reusability
+Common database operations (e.g., GetAll(), GetById(id), Add(entity), Update(entity), Delete(id)) can be shared across multiple parts of the application.
+
+Avoids code duplication in different controllers or services.
+
+6. Abstraction for Business Logic
+You can introduce an interface (IRepository<T>), making it easy to swap out implementations (e.g., switching from EF Core to Dapper or another data source).
+
+7. Simplified Data Caching and Logging
+If you need caching, logging, or performance optimizations, you can implement them inside the repository layer instead of modifying multiple controllers.
+
+I then created a Interface in a new folder called Repositories.
+
+using Bloggie.Web.Models.Domain;
+
+namespace Bloggie.Web.Repositories
+{
+    public interface ITagRepository
+    {
+        // Create definitions/Methods for CRUD operations
+        Task<IEnumerable<Tag>> GetAllAsync();
+
+        Task<Tag?> GetAsync(Guid id);
+
+        Task<Tag> AddAsync(Tag tag);
+
+        Task<Tag?> UpdateAsync(Tag tag);
+
+        Task<Tag?> DeleteAsync(Guid id);
+
+    }
+}
+
+Then I created a class inside the Repositories folder called TagRepository.cs
+
+Then I inherited from the ITagRepository, all the methods within it. 
+
+using Bloggie.Web.Models.Domain;
+
+namespace Bloggie.Web.Repositories
+{
+    public class TagRepository : ITagRepository
+    {
+    
+        public Task<Tag> AddAsync(Tag tag)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Tag?> DeleteAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Tag>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Tag?> GetAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Tag?> UpdateAsync(Tag tag)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
+
+Next, I created a class called Repository within the Repositories folder.
+
+It inherites from the ITagRepository.
+
+I made a constructor that has a parameter of bloggieDbContext
+
+  private readonly BloggieDbContext bloggieDbContext;
+
+  public TagRepository(BloggieDbContext bloggieDbContext)
+  {
+      this.bloggieDbContext = bloggieDbContext;
+  }
+
+Within the first method in the TagRepository file I moved the code that accesses the database from the Add method in the AdminTagsController.cs file. 
+
+  public async Task<Tag> AddAsync(Tag tag)
+  {
+      // Adds the new tag to the database.
+      await bloggieDbContext.Tags.AddAsync(tag);
+      // Saves changes to the database to persist the new tag.
+      await bloggieDbContext.SaveChangesAsync();
+      return tag;
+  }
+
+
+I then need to call the Repository inside the AdminTagsController.cs file
+
+I need to inject the ITagRepository instead of bloggieDbContext by using constructor injection
+
+namespace Bloggie.Web.Controllers
+{
+
+    // Defines the AdminTagsController, which inherits from the base Controller class.
+    
+    public class AdminTagsController : Controller
+    {
+        private readonly ITagRepository tagRepository;
+
+        public AdminTagsController(ITagRepository tagRepository)
+        {
+            this.tagRepository = tagRepository;
+        }
+
+
+Now the controller is calling the repository and the respositories job is to call the DbContext and call the Database.
 
 
 
